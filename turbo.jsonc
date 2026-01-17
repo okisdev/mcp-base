@@ -1,0 +1,55 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        ".wrangler/**",
+        "dist/**"
+      ],
+      "env": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
+    },
+    "deps:check": {
+      "dependsOn": [
+        "^deps:check"
+      ]
+    },
+    "deps:update": {
+      "dependsOn": [
+        "^deps:update"
+      ]
+    },
+    "deps:update:no-install": {
+      "dependsOn": [
+        "^deps:update:no-install"
+      ]
+    },
+    "generate:cloudflare:types": {
+      "dependsOn": [
+        "^generate:cloudflare:types"
+      ]
+    }
+  },
+  "globalEnv": [],
+  "globalDependencies": [
+    ".env",
+    ".env.local"
+  ]
+}

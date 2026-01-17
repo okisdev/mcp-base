@@ -1,0 +1,28 @@
+{
+  "name": "mcp-base",
+  "version": "0.0.1",
+  "description": "MCP Base CLI",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "mcp-base": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts --format esm --watch",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "mcp",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
