@@ -1,0 +1,28 @@
+{
+  "name": "@mcp-base/root",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:api": "turbo run dev --filter=@mcp-base/api",
+    "dev:web": "turbo run dev --filter=@mcp-base/web",
+    "build": "turbo build",
+    "build:api": "turbo run build --filter=@mcp-base/api",
+    "build:web": "turbo run build --filter=@mcp-base/web",
+    "deploy": "turbo run deploy",
+    "deploy:api": "turbo run deploy --filter=@mcp-base/api",
+    "deploy:docs": "turbo run deploy --filter=@mcp-base/docs",
+    "lint": "pnpm exec biome check",
+    "lint:fix": "pnpm exec biome check --fix"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
+    "turbo": "^2.7.5",
+    "ultracite": "^7.0.11"
+  },
+  "packageManager": "pnpm@10.28.0"
+}
