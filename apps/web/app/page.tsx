@@ -1,65 +1,99 @@
-import Image from 'next/image';
+'use client';
 
-export default function Home() {
+import { useEffect, useState } from 'react';
+import { Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ServiceCard } from '@/components/service-card';
+import { SettingsDialog } from '@/components/settings-dialog';
+import { fetchServices, type MCPService } from '@/lib/api';
+
+export default function Dashboard() {
+  const [services, setServices] = useState<MCPService[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<MCPService | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const loadServices = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchServices();
+      setServices(data);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load services');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadServices();
+  }, []);
+
+  const handleConfigure = (service: MCPService) => {
+    setSelectedService(service);
+    setSettingsOpen(true);
+  };
+
   return (
-    <div className='flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black'>
-      <main className='flex min-h-screen w-full max-w-3xl flex-col items-center justify-between bg-white px-16 py-32 sm:items-start dark:bg-black'>
-        <Image
-          alt='Next.js logo'
-          className='dark:invert'
-          height={20}
-          priority
-          src='/next.svg'
-          width={100}
-        />
-        <div className='flex flex-col items-center gap-6 text-center sm:items-start sm:text-left'>
-          <h1 className='max-w-xs font-semibold text-3xl text-black leading-10 tracking-tight dark:text-zinc-50'>
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className='max-w-md text-lg text-zinc-600 leading-8 dark:text-zinc-400'>
-            Looking for a starting point or more instructions? Head over to{' '}
-            <a
-              className='font-medium text-zinc-950 dark:text-zinc-50'
-              href='https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-            >
-              Templates
-            </a>{' '}
-            or the{' '}
-            <a
-              className='font-medium text-zinc-950 dark:text-zinc-50'
-              href='https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-            >
-              Learning
-            </a>{' '}
-            center.
-          </p>
-        </div>
-        <div className='flex flex-col gap-4 font-medium text-base sm:flex-row'>
-          <a
-            className='flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] md:w-[158px] dark:hover:bg-[#ccc]'
-            href='https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-            rel='noopener noreferrer'
-            target='_blank'
+    <div className="min-h-screen bg-background">
+      <header className="border-b">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+          <h1 className="text-xl font-semibold">MCP Base</h1>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSelectedService(null);
+              setSettingsOpen(true);
+            }}
           >
-            <Image
-              alt='Vercel logomark'
-              className='dark:invert'
-              height={16}
-              src='/vercel.svg'
-              width={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className='flex h-12 w-full items-center justify-center rounded-full border border-black/[.08] border-solid px-5 transition-colors hover:border-transparent hover:bg-black/[.04] md:w-[158px] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]'
-            href='https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-            rel='noopener noreferrer'
-            target='_blank'
-          >
-            Documentation
-          </a>
+            <Settings className="h-4 w-4 mr-2" />
+            Settings
+          </Button>
         </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8">
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          </div>
+        ) : error ? (
+          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center">
+            <p className="text-sm text-destructive">{error}</p>
+            <Button variant="outline" size="sm" onClick={loadServices} className="mt-2">
+              Retry
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold">Services</h2>
+              <p className="text-muted-foreground mt-1">
+                {services.length} MCP services available
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {services.map((service) => (
+                <ServiceCard
+                  key={service.name}
+                  service={service}
+                  onConfigure={() => handleConfigure(service)}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </main>
+
+      <SettingsDialog
+        service={selectedService}
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        onSave={loadServices}
+      />
     </div>
   );
 }

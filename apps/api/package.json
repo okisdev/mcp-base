@@ -11,7 +11,9 @@
     "deps:update:no-install": "npx taze major -f -w"
   },
   "dependencies": {
-    "hono": "^4.11.4"
+    "@mcp-base/mcp-core": "workspace:*",
+    "hono": "^4.11.4",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "wrangler": "^4.59.3"
