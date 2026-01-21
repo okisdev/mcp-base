@@ -13,7 +13,10 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts",
     "dev": "tsup src/index.ts --format esm --watch",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "deps:check": "npx taze major -f",
+    "deps:update": "npx taze major -f -w && pnpm install",
+    "deps:update:no-install": "npx taze major -f -w"
   },
   "keywords": [
     "mcp",
@@ -22,7 +25,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0"
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }

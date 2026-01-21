@@ -1,16 +1,19 @@
 {
   "name": "@mcp-base/api",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "cf-typegen": "wrangler types",
+    "deps:check": "npx taze major -f",
+    "deps:update": "npx taze major -f -w && pnpm install",
+    "deps:update:no-install": "npx taze major -f -w"
   },
   "dependencies": {
     "hono": "^4.11.4"
   },
   "devDependencies": {
-    "wrangler": "^4.4.0"
+    "wrangler": "^4.59.3"
   }
 }
