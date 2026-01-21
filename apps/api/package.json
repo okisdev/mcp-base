@@ -11,7 +11,9 @@
     "deps:update:no-install": "npx taze major -f -w"
   },
   "dependencies": {
+    "@hono/mcp": "^0.2.3",
     "@mcp-base/mcp-core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.12.1",
     "hono": "^4.11.4",
     "zod": "^4.3.5"
   },

@@ -12,7 +12,7 @@ interface GitHubRequestOptions {
  * GitHub API client for making authenticated requests
  */
 export class GitHubClient {
-  private token: string;
+  private readonly token: string;
 
   constructor(config: ServiceConfig) {
     const token = config.GITHUB_TOKEN;

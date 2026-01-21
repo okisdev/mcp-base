@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
+import { StreamableHTTPTransport } from '@hono/mcp';
 import type { ServiceConfig } from '@mcp-base/mcp-core';
-import { registry } from '../mcp/registry';
+import { createMcpServer } from '../mcp/server';
 
 const mcp = new Hono();
 
@@ -30,100 +31,19 @@ function getConfigFromHeaders(headers: Headers): ServiceConfig {
 
 /**
  * MCP Protocol endpoint
- * Handles JSON-RPC 2.0 requests for MCP compatibility
+ * Handles MCP requests using StreamableHTTPTransport
  */
-mcp.post('/', async (c) => {
-  let request: MCPRequest;
-  try {
-    request = await c.req.json();
-  } catch {
-    return c.json(
-      { jsonrpc: '2.0', error: { code: -32700, message: 'Parse error' }, id: null },
-      400,
-    );
-  }
+mcp.all('/', async (c) => {
+  const config = getConfigFromHeaders(c.req.raw.headers);
+  const mcpServer = createMcpServer(config);
 
-  const { method, params, id } = request;
+  const transport = new StreamableHTTPTransport({
+    sessionIdGenerator: undefined, // Stateless mode for CF Workers
+    enableJsonResponse: true,
+  });
 
-  // Handle different MCP methods
-  switch (method) {
-    case 'initialize': {
-      return c.json({
-        jsonrpc: '2.0',
-        result: {
-          protocolVersion: '2024-11-05',
-          capabilities: {
-            tools: {},
-          },
-          serverInfo: {
-            name: 'mcp-base',
-            version: '0.0.1',
-          },
-        },
-        id,
-      });
-    }
-
-    case 'tools/list': {
-      const services = registry.getServices();
-      const tools = services.flatMap((service) =>
-        service.tools.map((tool) => ({
-          name: `${service.name}__${tool.name}`,
-          description: `[${service.name}] ${tool.description}`,
-          inputSchema: tool.inputSchema,
-        })),
-      );
-
-      return c.json({
-        jsonrpc: '2.0',
-        result: { tools },
-        id,
-      });
-    }
-
-    case 'tools/call': {
-      const { name: fullName, arguments: args } = params as {
-        name: string;
-        arguments?: Record<string, unknown>;
-      };
-
-      // Parse service__tool name format
-      const [serviceName, ...toolParts] = fullName.split('__');
-      const toolName = toolParts.join('__');
-
-      if (!serviceName || !toolName) {
-        return c.json({
-          jsonrpc: '2.0',
-          error: { code: -32602, message: 'Invalid tool name format. Expected: service__tool' },
-          id,
-        });
-      }
-
-      const config = getConfigFromHeaders(c.req.raw.headers);
-      const result = await registry.executeTool(serviceName, toolName, args || {}, config);
-
-      return c.json({
-        jsonrpc: '2.0',
-        result,
-        id,
-      });
-    }
-
-    default: {
-      return c.json({
-        jsonrpc: '2.0',
-        error: { code: -32601, message: `Method not found: ${method}` },
-        id,
-      });
-    }
-  }
+  await mcpServer.connect(transport);
+  return transport.handleRequest(c);
 });
-
-interface MCPRequest {
-  jsonrpc: '2.0';
-  method: string;
-  params?: Record<string, unknown>;
-  id: string | number | null;
-}
 
 export default mcp;
