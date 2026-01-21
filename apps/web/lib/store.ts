@@ -59,7 +59,12 @@ export function clearConfig(service: string): void {
 /**
  * Check if a service is configured (has all required fields)
  */
-export function isConfigured(service: string, requiredFields: string[]): boolean {
+export function isConfigured(
+  service: string,
+  requiredFields: string[]
+): boolean {
   const config = getConfig(service);
-  return requiredFields.every((field) => config[field] && config[field].trim() !== '');
+  return requiredFields.every(
+    (field) => config[field] && config[field].trim() !== ''
+  );
 }

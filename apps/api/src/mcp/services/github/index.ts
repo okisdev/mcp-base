@@ -3,7 +3,8 @@ import { githubHandlers, githubTools } from './tools';
 
 export const githubService: MCPService = {
   name: 'github',
-  description: 'GitHub repository search, code exploration, issues, and pull requests',
+  description:
+    'GitHub repository search, code exploration, issues, and pull requests',
   tools: githubTools,
   configSchema: {
     type: 'object',

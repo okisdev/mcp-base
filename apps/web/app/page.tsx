@@ -1,17 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 import { ServiceCard } from '@/components/service-card';
 import { SettingsDialog } from '@/components/settings-dialog';
+import { Button } from '@/components/ui/button';
 import { fetchServices, type MCPService } from '@/lib/api';
 
 export default function Dashboard() {
   const [services, setServices] = useState<MCPService[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedService, setSelectedService] = useState<MCPService | null>(null);
+  const [selectedService, setSelectedService] = useState<MCPService | null>(
+    null
+  );
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const loadServices = async () => {
@@ -37,50 +39,55 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <h1 className="text-xl font-semibold">MCP Base</h1>
+    <div className='min-h-screen bg-background'>
+      <header className='border-b'>
+        <div className='container mx-auto flex h-16 items-center justify-between px-4'>
+          <h1 className='font-semibold text-xl'>MCP Base</h1>
           <Button
-            variant="outline"
-            size="sm"
             onClick={() => {
               setSelectedService(null);
               setSettingsOpen(true);
             }}
+            size='sm'
+            variant='outline'
           >
-            <Settings className="h-4 w-4 mr-2" />
+            <Settings className='mr-2 h-4 w-4' />
             Settings
           </Button>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className='container mx-auto px-4 py-8'>
         {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          <div className='flex items-center justify-center py-12'>
+            <div className='h-8 w-8 animate-spin rounded-full border-primary border-b-2' />
           </div>
         ) : error ? (
-          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center">
-            <p className="text-sm text-destructive">{error}</p>
-            <Button variant="outline" size="sm" onClick={loadServices} className="mt-2">
+          <div className='rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center'>
+            <p className='text-destructive text-sm'>{error}</p>
+            <Button
+              className='mt-2'
+              onClick={loadServices}
+              size='sm'
+              variant='outline'
+            >
               Retry
             </Button>
           </div>
         ) : (
           <>
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold">Services</h2>
-              <p className="text-muted-foreground mt-1">
+            <div className='mb-6'>
+              <h2 className='font-semibold text-2xl'>Services</h2>
+              <p className='mt-1 text-muted-foreground'>
                 {services.length} MCP services available
               </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
               {services.map((service) => (
                 <ServiceCard
                   key={service.name}
-                  service={service}
                   onConfigure={() => handleConfigure(service)}
+                  service={service}
                 />
               ))}
             </div>
@@ -89,10 +96,10 @@ export default function Dashboard() {
       </main>
 
       <SettingsDialog
-        service={selectedService}
-        open={settingsOpen}
         onOpenChange={setSettingsOpen}
         onSave={loadServices}
+        open={settingsOpen}
+        service={selectedService}
       />
     </div>
   );

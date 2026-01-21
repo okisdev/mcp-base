@@ -1,6 +1,6 @@
-import { Hono } from 'hono';
 import { StreamableHTTPTransport } from '@hono/mcp';
 import type { ServiceConfig } from '@mcp-base/mcp-core';
+import { Hono } from 'hono';
 import { createMcpServer } from '../mcp/server';
 
 const mcp = new Hono();

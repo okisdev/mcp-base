@@ -1,8 +1,8 @@
 'use client';
 
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import type { MCPToolResult } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 interface ResultViewProps {
   result: MCPToolResult | null;
@@ -28,8 +28,13 @@ function formatContent(content: MCPToolResult['content']): string {
 export function ResultView({ result, className }: ResultViewProps) {
   if (!result) {
     return (
-      <div className={cn('rounded-lg border border-dashed p-6 text-center', className)}>
-        <p className="text-sm text-muted-foreground">
+      <div
+        className={cn(
+          'rounded-lg border border-dashed p-6 text-center',
+          className
+        )}
+      >
+        <p className='text-muted-foreground text-sm'>
           Execute a tool to see results here
         </p>
       </div>
@@ -41,16 +46,16 @@ export function ResultView({ result, className }: ResultViewProps) {
 
   return (
     <div className={cn('space-y-2', className)}>
-      <div className="flex items-center gap-2">
+      <div className='flex items-center gap-2'>
         {isError ? (
           <>
-            <AlertCircle className="h-4 w-4 text-destructive" />
-            <span className="text-sm font-medium text-destructive">Error</span>
+            <AlertCircle className='h-4 w-4 text-destructive' />
+            <span className='font-medium text-destructive text-sm'>Error</span>
           </>
         ) : (
           <>
-            <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-500" />
-            <span className="text-sm font-medium text-green-600 dark:text-green-500">
+            <CheckCircle2 className='h-4 w-4 text-green-600 dark:text-green-500' />
+            <span className='font-medium text-green-600 text-sm dark:text-green-500'>
               Success
             </span>
           </>
@@ -58,10 +63,8 @@ export function ResultView({ result, className }: ResultViewProps) {
       </div>
       <pre
         className={cn(
-          'rounded-lg border p-4 text-sm overflow-auto max-h-96 font-mono',
-          isError
-            ? 'bg-destructive/10 border-destructive/20'
-            : 'bg-muted/50'
+          'max-h-96 overflow-auto rounded-lg border p-4 font-mono text-sm',
+          isError ? 'border-destructive/20 bg-destructive/10' : 'bg-muted/50'
         )}
       >
         {content}

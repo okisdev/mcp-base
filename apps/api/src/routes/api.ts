@@ -1,6 +1,6 @@
+import type { ServiceConfig } from '@mcp-base/mcp-core';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import type { ServiceConfig } from '@mcp-base/mcp-core';
 import { registry } from '../mcp/registry';
 
 const api = new Hono();
@@ -77,7 +77,10 @@ api.post('/services/:name/tools/:tool', async (c) => {
 
   const tool = service.tools.find((t) => t.name === toolName);
   if (!tool) {
-    return c.json({ error: `Tool "${toolName}" not found in service "${serviceName}"` }, 404);
+    return c.json(
+      { error: `Tool "${toolName}" not found in service "${serviceName}"` },
+      404
+    );
   }
 
   let params: Record<string, unknown> = {};
@@ -89,7 +92,12 @@ api.post('/services/:name/tools/:tool', async (c) => {
   }
 
   const config = getConfigFromHeaders(c.req.raw.headers);
-  const result = await registry.executeTool(serviceName, toolName, params, config);
+  const result = await registry.executeTool(
+    serviceName,
+    toolName,
+    params,
+    config
+  );
 
   return c.json({ result });
 });

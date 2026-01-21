@@ -1,5 +1,11 @@
 import type { MCPTool, MCPToolResult, ServiceConfig } from '@mcp-base/mcp-core';
-import { errorResult, jsonContent, successResult, textContent, toolResult } from '@mcp-base/mcp-core';
+import {
+  errorResult,
+  jsonContent,
+  successResult,
+  textContent,
+  toolResult,
+} from '@mcp-base/mcp-core';
 import { GitHubClient } from './client';
 
 // Tool definitions
@@ -30,7 +36,8 @@ export const githubTools: MCPTool[] = [
         },
         query: {
           type: 'string',
-          description: 'Code to search for: function names, class names, keywords',
+          description:
+            'Code to search for: function names, class names, keywords',
         },
       },
       required: ['repository', 'query'],
@@ -150,7 +157,7 @@ export const githubTools: MCPTool[] = [
 // Tool handlers
 export async function findRepo(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new GitHubClient(config);
@@ -165,15 +172,19 @@ export async function findRepo(
       url: repo.html_url,
     }));
 
-    return toolResult([jsonContent({ total_count: result.total_count, repositories: repos })]);
+    return toolResult([
+      jsonContent({ total_count: result.total_count, repositories: repos }),
+    ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function searchCode(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new GitHubClient(config);
@@ -187,15 +198,19 @@ export async function searchCode(
       url: item.html_url,
     }));
 
-    return toolResult([jsonContent({ total_count: result.total_count, matches: items })]);
+    return toolResult([
+      jsonContent({ total_count: result.total_count, matches: items }),
+    ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function getFileContent(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new GitHubClient(config);
@@ -211,13 +226,15 @@ export async function getFileContent(
 
     return errorResult('File content not available');
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function listFiles(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new GitHubClient(config);
@@ -234,13 +251,15 @@ export async function listFiles(
 
     return toolResult([jsonContent(files)]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function getRepoInfo(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new GitHubClient(config);
@@ -263,13 +282,15 @@ export async function getRepoInfo(
       }),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function getIssue(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new GitHubClient(config);
@@ -297,13 +318,15 @@ export async function getIssue(
       }),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function getPullRequest(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new GitHubClient(config);
@@ -333,13 +356,15 @@ export async function getPullRequest(
       textContent(`\n--- Diff ---\n${diff}`),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function getCommit(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new GitHubClient(config);
@@ -364,7 +389,9 @@ export async function getCommit(
       }),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 

@@ -33,7 +33,10 @@ export function errorResult(message: string): MCPToolResult {
 /**
  * Create a tool result with multiple content items
  */
-export function toolResult(content: MCPContent[], isError = false): MCPToolResult {
+export function toolResult(
+  content: MCPContent[],
+  isError = false
+): MCPToolResult {
   return {
     content,
     isError,

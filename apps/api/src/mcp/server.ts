@@ -1,10 +1,10 @@
+import type { ServiceConfig } from '@mcp-base/mcp-core';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import {
-  ListToolsRequestSchema,
   CallToolRequestSchema,
   type CallToolResult,
+  ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import type { ServiceConfig } from '@mcp-base/mcp-core';
 import { registry } from './registry';
 
 /**
@@ -15,7 +15,7 @@ import { registry } from './registry';
 export function createMcpServer(config: ServiceConfig): Server {
   const server = new Server(
     { name: 'mcp-base', version: '0.0.1' },
-    { capabilities: { tools: {} } },
+    { capabilities: { tools: {} } }
   );
 
   // Handle tools/list
@@ -26,35 +26,43 @@ export function createMcpServer(config: ServiceConfig): Server {
         name: `${service.name}__${tool.name}`,
         description: `[${service.name}] ${tool.description}`,
         inputSchema: tool.inputSchema,
-      })),
+      }))
     );
     return { tools };
   });
 
   // Handle tools/call
-  server.setRequestHandler(CallToolRequestSchema, async (request): Promise<CallToolResult> => {
-    const { name: fullName, arguments: args } = request.params;
+  server.setRequestHandler(
+    CallToolRequestSchema,
+    async (request): Promise<CallToolResult> => {
+      const { name: fullName, arguments: args } = request.params;
 
-    // Parse service__tool name format
-    const [serviceName, ...toolParts] = fullName.split('__');
-    const toolName = toolParts.join('__');
+      // Parse service__tool name format
+      const [serviceName, ...toolParts] = fullName.split('__');
+      const toolName = toolParts.join('__');
 
-    if (!serviceName || !toolName) {
-      return {
-        content: [{ type: 'text', text: 'Invalid tool name format. Expected: service__tool' }],
-        isError: true,
-      };
+      if (!(serviceName && toolName)) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: 'Invalid tool name format. Expected: service__tool',
+            },
+          ],
+          isError: true,
+        };
+      }
+
+      const result = await registry.executeTool(
+        serviceName,
+        toolName,
+        (args || {}) as Record<string, unknown>,
+        config
+      );
+
+      return result as CallToolResult;
     }
-
-    const result = await registry.executeTool(
-      serviceName,
-      toolName,
-      (args || {}) as Record<string, unknown>,
-      config,
-    );
-
-    return result as CallToolResult;
-  });
+  );
 
   return server;
 }

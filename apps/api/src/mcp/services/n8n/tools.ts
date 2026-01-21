@@ -20,7 +20,8 @@ export const n8nTools: MCPTool[] = [
   },
   {
     name: 'get_workflow',
-    description: 'Get details of a specific workflow including nodes and connections',
+    description:
+      'Get details of a specific workflow including nodes and connections',
     inputSchema: {
       type: 'object',
       properties: {
@@ -116,7 +117,7 @@ export const n8nTools: MCPTool[] = [
 // Tool handlers
 export async function listWorkflows(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new N8nClient(config);
@@ -133,13 +134,15 @@ export async function listWorkflows(
 
     return toolResult([jsonContent({ workflows, count: workflows.length })]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function getWorkflow(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new N8nClient(config);
@@ -162,13 +165,15 @@ export async function getWorkflow(
       }),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function activateWorkflow(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new N8nClient(config);
@@ -184,13 +189,15 @@ export async function activateWorkflow(
       }),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function deactivateWorkflow(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new N8nClient(config);
@@ -206,13 +213,15 @@ export async function deactivateWorkflow(
       }),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function executeWorkflow(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new N8nClient(config);
@@ -229,13 +238,15 @@ export async function executeWorkflow(
       }),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function listExecutions(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new N8nClient(config);
@@ -254,13 +265,15 @@ export async function listExecutions(
 
     return toolResult([jsonContent({ executions, count: executions.length })]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 
 export async function getExecution(
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ): Promise<MCPToolResult> {
   try {
     const client = new N8nClient(config);
@@ -279,7 +292,9 @@ export async function getExecution(
       }),
     ]);
   } catch (error) {
-    return errorResult(error instanceof Error ? error.message : 'Unknown error');
+    return errorResult(
+      error instanceof Error ? error.message : 'Unknown error'
+    );
   }
 }
 

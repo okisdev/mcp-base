@@ -1,4 +1,3 @@
-import type { ServiceConfig } from './store';
 import { getAllConfigs } from './store';
 
 const API_BASE = '/api';
@@ -75,7 +74,7 @@ export async function fetchServices(): Promise<MCPService[]> {
  * Fetch tools for a specific service
  */
 export async function fetchTools(
-  service: string,
+  service: string
 ): Promise<{ tools: MCPTool[]; configSchema?: JSONSchema }> {
   const response = await fetch(`${API_BASE}/services/${service}/tools`, {
     headers: getAuthHeaders(),
@@ -94,16 +93,19 @@ export async function fetchTools(
 export async function executeTool(
   service: string,
   tool: string,
-  params: Record<string, unknown>,
+  params: Record<string, unknown>
 ): Promise<MCPToolResult> {
-  const response = await fetch(`${API_BASE}/services/${service}/tools/${tool}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeaders(),
-    },
-    body: JSON.stringify({ params }),
-  });
+  const response = await fetch(
+    `${API_BASE}/services/${service}/tools/${tool}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+      body: JSON.stringify({ params }),
+    }
+  );
 
   if (!response.ok) {
     throw new Error(`Failed to execute tool ${tool}`);
@@ -116,7 +118,10 @@ export async function executeTool(
 /**
  * Check API health
  */
-export async function checkHealth(): Promise<{ status: string; services: number }> {
+export async function checkHealth(): Promise<{
+  status: string;
+  services: number;
+}> {
   const response = await fetch(`${API_BASE}/health`);
 
   if (!response.ok) {

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,11 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { MCPService, JSONSchema } from '@/lib/api';
-import { getConfig, setConfig, type ServiceConfig } from '@/lib/store';
+import type { JSONSchema, MCPService } from '@/lib/api';
+import { getConfig, type ServiceConfig, setConfig } from '@/lib/store';
 
 interface SettingsDialogProps {
   service: MCPService | null;
@@ -22,7 +22,9 @@ interface SettingsDialogProps {
   onSave?: () => void;
 }
 
-function getConfigFields(schema?: JSONSchema): Array<{ key: string; description: string }> {
+function getConfigFields(
+  schema?: JSONSchema
+): Array<{ key: string; description: string }> {
   if (!schema?.properties) {
     return [];
   }
@@ -33,7 +35,12 @@ function getConfigFields(schema?: JSONSchema): Array<{ key: string; description:
   }));
 }
 
-export function SettingsDialog({ service, open, onOpenChange, onSave }: SettingsDialogProps) {
+export function SettingsDialog({
+  service,
+  open,
+  onOpenChange,
+  onSave,
+}: SettingsDialogProps) {
   const [config, setConfigState] = useState<ServiceConfig>({});
 
   useEffect(() => {
@@ -59,37 +66,41 @@ export function SettingsDialog({ service, open, onOpenChange, onSave }: Settings
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="capitalize">{service.name} Settings</DialogTitle>
+          <DialogTitle className='capitalize'>
+            {service.name} Settings
+          </DialogTitle>
           <DialogDescription>
             Configure API keys and credentials for {service.name}.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className='grid gap-4 py-4'>
           {fields.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
+            <p className='text-muted-foreground text-sm'>
               This service does not require any configuration.
             </p>
           ) : (
             fields.map((field) => (
-              <div key={field.key} className="grid gap-2">
+              <div className='grid gap-2' key={field.key}>
                 <Label htmlFor={field.key}>{field.key}</Label>
                 <Input
                   id={field.key}
-                  type="password"
-                  placeholder={field.description}
-                  value={config[field.key] || ''}
                   onChange={(e) => handleChange(field.key, e.target.value)}
+                  placeholder={field.description}
+                  type='password'
+                  value={config[field.key] || ''}
                 />
-                <p className="text-xs text-muted-foreground">{field.description}</p>
+                <p className='text-muted-foreground text-xs'>
+                  {field.description}
+                </p>
               </div>
             ))
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button onClick={() => onOpenChange(false)} variant='outline'>
             Cancel
           </Button>
           <Button onClick={handleSave}>Save</Button>

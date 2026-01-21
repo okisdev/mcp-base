@@ -25,8 +25,13 @@ export class GitHubClient {
   /**
    * Make a request to the GitHub API
    */
-  async request<T>(endpoint: string, options: GitHubRequestOptions = {}): Promise<T> {
-    const url = endpoint.startsWith('http') ? endpoint : `${GITHUB_API_BASE}${endpoint}`;
+  async request<T>(
+    endpoint: string,
+    options: GitHubRequestOptions = {}
+  ): Promise<T> {
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${GITHUB_API_BASE}${endpoint}`;
 
     const response = await fetch(url, {
       method: options.method || 'GET',
@@ -51,15 +56,20 @@ export class GitHubClient {
    * Search for repositories
    */
   async searchRepositories(query: string): Promise<GitHubSearchResult> {
-    return this.request(`/search/repositories?q=${encodeURIComponent(query)}&per_page=10`);
+    return this.request(
+      `/search/repositories?q=${encodeURIComponent(query)}&per_page=10`
+    );
   }
 
   /**
    * Search for code in a repository
    */
-  async searchCode(repository: string, query: string): Promise<GitHubCodeSearchResult> {
+  async searchCode(
+    repository: string,
+    query: string
+  ): Promise<GitHubCodeSearchResult> {
     return this.request(
-      `/search/code?q=${encodeURIComponent(query)}+repo:${encodeURIComponent(repository)}&per_page=20`,
+      `/search/code?q=${encodeURIComponent(query)}+repo:${encodeURIComponent(repository)}&per_page=20`
     );
   }
 
@@ -73,7 +83,11 @@ export class GitHubClient {
   /**
    * Get file content
    */
-  async getFileContent(repository: string, path: string, ref?: string): Promise<GitHubFileContent> {
+  async getFileContent(
+    repository: string,
+    path: string,
+    ref?: string
+  ): Promise<GitHubFileContent> {
     const endpoint = `/repos/${repository}/contents/${path}${ref ? `?ref=${ref}` : ''}`;
     return this.request(endpoint);
   }
@@ -81,7 +95,10 @@ export class GitHubClient {
   /**
    * List files in a directory
    */
-  async listFiles(repository: string, path: string): Promise<GitHubFileContent[]> {
+  async listFiles(
+    repository: string,
+    path: string
+  ): Promise<GitHubFileContent[]> {
     const endpoint = `/repos/${repository}/contents/${path || ''}`;
     return this.request(endpoint);
   }
@@ -89,14 +106,20 @@ export class GitHubClient {
   /**
    * Get issue with timeline
    */
-  async getIssue(repository: string, issueNumber: number): Promise<GitHubIssue> {
+  async getIssue(
+    repository: string,
+    issueNumber: number
+  ): Promise<GitHubIssue> {
     return this.request(`/repos/${repository}/issues/${issueNumber}`);
   }
 
   /**
    * Get issue timeline
    */
-  async getIssueTimeline(repository: string, issueNumber: number): Promise<GitHubTimelineEvent[]> {
+  async getIssueTimeline(
+    repository: string,
+    issueNumber: number
+  ): Promise<GitHubTimelineEvent[]> {
     return this.request(`/repos/${repository}/issues/${issueNumber}/timeline`, {
       headers: { Accept: 'application/vnd.github.mockingbird-preview+json' },
     });
@@ -105,14 +128,20 @@ export class GitHubClient {
   /**
    * Get pull request
    */
-  async getPullRequest(repository: string, pullNumber: number): Promise<GitHubPullRequest> {
+  async getPullRequest(
+    repository: string,
+    pullNumber: number
+  ): Promise<GitHubPullRequest> {
     return this.request(`/repos/${repository}/pulls/${pullNumber}`);
   }
 
   /**
    * Get pull request diff
    */
-  async getPullRequestDiff(repository: string, pullNumber: number): Promise<string> {
+  async getPullRequestDiff(
+    repository: string,
+    pullNumber: number
+  ): Promise<string> {
     const url = `${GITHUB_API_BASE}/repos/${repository}/pulls/${pullNumber}`;
     const response = await fetch(url, {
       headers: {

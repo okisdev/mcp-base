@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { registry } from './mcp/registry';
-import { githubService, githubHandlers } from './mcp/services/github';
-import { n8nService, n8nHandlers } from './mcp/services/n8n';
+import { githubHandlers, githubService } from './mcp/services/github';
+import { n8nHandlers, n8nService } from './mcp/services/n8n';
 import apiRoutes from './routes/api';
 import mcpRoutes from './routes/mcp';
 

@@ -1,8 +1,12 @@
-import type { MCPService, MCPToolResult, ServiceConfig } from '@mcp-base/mcp-core';
+import type {
+  MCPService,
+  MCPToolResult,
+  ServiceConfig,
+} from '@mcp-base/mcp-core';
 
 export type ToolHandler = (
   params: Record<string, unknown>,
-  config: ServiceConfig,
+  config: ServiceConfig
 ) => Promise<MCPToolResult>;
 
 export interface RegisteredService extends MCPService {
@@ -26,7 +30,7 @@ export class MCPRegistry {
     for (const tool of service.tools) {
       if (!handlersMap.has(tool.name)) {
         throw new Error(
-          `Service "${service.name}" tool "${tool.name}" has no handler`,
+          `Service "${service.name}" tool "${tool.name}" has no handler`
         );
       }
     }
@@ -41,7 +45,9 @@ export class MCPRegistry {
    * Get all registered services (without handlers)
    */
   getServices(): MCPService[] {
-    return Array.from(this.services.values()).map(({ handlers, ...service }) => service);
+    return Array.from(this.services.values()).map(
+      ({ handlers, ...service }) => service
+    );
   }
 
   /**
@@ -58,7 +64,7 @@ export class MCPRegistry {
     serviceName: string,
     toolName: string,
     params: Record<string, unknown>,
-    config: ServiceConfig,
+    config: ServiceConfig
   ): Promise<MCPToolResult> {
     const service = this.services.get(serviceName);
     if (!service) {
@@ -71,7 +77,12 @@ export class MCPRegistry {
     const handler = service.handlers.get(toolName);
     if (!handler) {
       return {
-        content: [{ type: 'text', text: `Tool "${toolName}" not found in service "${serviceName}"` }],
+        content: [
+          {
+            type: 'text',
+            text: `Tool "${toolName}" not found in service "${serviceName}"`,
+          },
+        ],
         isError: true,
       };
     }

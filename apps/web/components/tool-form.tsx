@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import { Play } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import type { MCPTool, JSONSchema } from '@/lib/api';
+import type { JSONSchema, MCPTool } from '@/lib/api';
 
 interface ToolFormProps {
   tool: MCPTool;
@@ -85,49 +85,55 @@ export function ToolForm({ tool, onExecute, isLoading }: ToolFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-1">
-        <h3 className="font-medium">{tool.name}</h3>
-        <p className="text-sm text-muted-foreground">{tool.description}</p>
+    <form className='space-y-4' onSubmit={handleSubmit}>
+      <div className='space-y-1'>
+        <h3 className='font-medium'>{tool.name}</h3>
+        <p className='text-muted-foreground text-sm'>{tool.description}</p>
       </div>
 
       {fields.length > 0 && (
-        <div className="space-y-4">
+        <div className='space-y-4'>
           {fields.map((field) => (
-            <div key={field.name} className="grid gap-2">
+            <div className='grid gap-2' key={field.name}>
               <Label htmlFor={field.name}>
                 {field.name}
-                {field.required && <span className="text-destructive ml-1">*</span>}
+                {field.required && (
+                  <span className='ml-1 text-destructive'>*</span>
+                )}
               </Label>
               {field.isObject ? (
                 <Textarea
+                  className='font-mono text-sm'
                   id={field.name}
-                  placeholder={field.description || `Enter ${field.name} as JSON`}
-                  value={values[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
-                  className="font-mono text-sm"
+                  placeholder={
+                    field.description || `Enter ${field.name} as JSON`
+                  }
                   rows={3}
+                  value={values[field.name] || ''}
                 />
               ) : (
                 <Input
                   id={field.name}
-                  type={field.type === 'number' ? 'number' : 'text'}
-                  placeholder={field.description || `Enter ${field.name}`}
-                  value={values[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
+                  placeholder={field.description || `Enter ${field.name}`}
                   required={field.required}
+                  type={field.type === 'number' ? 'number' : 'text'}
+                  value={values[field.name] || ''}
                 />
               )}
               {field.description && (
-                <p className="text-xs text-muted-foreground">{field.description}</p>
+                <p className='text-muted-foreground text-xs'>
+                  {field.description}
+                </p>
               )}
             </div>
           ))}
         </div>
       )}
 
-      <Button type="submit" disabled={isLoading} className="w-full">
-        <Play className="h-4 w-4 mr-2" />
+      <Button className='w-full' disabled={isLoading} type='submit'>
+        <Play className='mr-2 h-4 w-4' />
         {isLoading ? 'Executing...' : 'Execute'}
       </Button>
     </form>

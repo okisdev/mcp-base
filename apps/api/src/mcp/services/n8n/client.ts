@@ -36,7 +36,10 @@ export class N8nClient {
   /**
    * Make a request to the n8n API
    */
-  private async request<T>(endpoint: string, options: N8nRequestOptions = {}): Promise<T> {
+  private async request<T>(
+    endpoint: string,
+    options: N8nRequestOptions = {}
+  ): Promise<T> {
     const url = `${this.baseUrl}/api/v1${endpoint}`;
 
     const response = await fetch(url, {
@@ -87,7 +90,10 @@ export class N8nClient {
   /**
    * Execute a workflow
    */
-  async executeWorkflow(id: string, data?: Record<string, unknown>): Promise<N8nExecution> {
+  async executeWorkflow(
+    id: string,
+    data?: Record<string, unknown>
+  ): Promise<N8nExecution> {
     return this.request(`/workflows/${id}/run`, {
       method: 'POST',
       body: data ? { data } : undefined,
@@ -97,7 +103,10 @@ export class N8nClient {
   /**
    * List executions
    */
-  async listExecutions(workflowId?: string, limit = 20): Promise<N8nListResponse<N8nExecution>> {
+  async listExecutions(
+    workflowId?: string,
+    limit = 20
+  ): Promise<N8nListResponse<N8nExecution>> {
     const params = new URLSearchParams({ limit: limit.toString() });
     if (workflowId) {
       params.set('workflowId', workflowId);
